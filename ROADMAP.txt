@@ -1,0 +1,33 @@
+=====================================================================
+ROADMAP DEL PROYECTO: MI MENÚ SEMANAL
+=====================================================================
+
+ETAPA 1: Base del proyecto y maqueta inicial (COMPLETADA)
+[x] Crear estructura del proyecto con React 19 + TypeScript + Vite
+[x] Configurar repositorio en GitHub (rama principal: main)
+[x] Verificar e instalar dependencias (React, Lucide React, Supabase JS)
+[x] Diseñar e implementar layout general (Sidebar, Header con breadcrumb dinámico, contenedor principal)
+[x] Implementar pantalla principal (Dashboard) con selector de semanas, selector de días, tarjetas de comidas del día y vista previa interactiva de lista de compras
+[x] Implementar vistas provisorias (placeholders) para navegación entre secciones (Menú semanal, Lista de compras, Lo que comí, Historial)
+[x] Aplicar estilos CSS propios y verificar diseño responsive (escritorio, tablet y móvil con menú desplegable)
+[x] Corregir tipado de entorno Vite (`vite-env.d.ts`) y verificar compilación limpia (`npm run build`)
+
+ETAPA 2: Funcionalidad local de las secciones principales (EN PROGRESO)
+[x] Construir la sección "Menú semanal" para planificar desayuno, almuerzo, merienda y cena de cada día de la semana
+[x] Conectar el menú semanal con el Dashboard ("Comidas del día", navegación de semanas/días sincronizada y persistencia en localStorage)
+[x] Construir la sección "Lista de compras" completa (agregar, editar, marcar/desmarcar, eliminar, vaciar con confirmación y filtrar ítems por categoría y estado), conectada con el Dashboard y localStorage
+[ ] Construir la sección "Lo que comí" (registro real diario vs. lo planificado, sin exigencias)
+[ ] Construir la sección "Historial" para consultar semanas anteriores
+[ ] Conectar el resto de las secciones con el Dashboard y localStorage
+
+ETAPA 3: Integración con Supabase — Autenticación y Base de Datos (PENDIENTE)
+[ ] Crear proyecto en Supabase y configurar variables de entorno (`.env.local` con `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`)
+[ ] Configurar autenticación de usuarios (registro e inicio de sesión con correo y contraseña)
+[ ] Crear esquema SQL en PostgreSQL (tablas: semanas, comidas planificadas, comidas registradas, lista de compras)
+[ ] Configurar políticas de seguridad Row Level Security (RLS) para que cada usuario acceda únicamente a sus datos
+[ ] Conectar el frontend con Supabase para lectura y escritura en tiempo real
+
+ETAPA 4: Pulido, experiencia de usuario y despliegue (PENDIENTE)
+[ ] Implementar buscador rápido y mejoras de accesibilidad
+[ ] Optimizar estados de carga, mensajes de confirmación y manejo de errores
+[ ] Desplegar versión en producción (Vercel / Netlify)

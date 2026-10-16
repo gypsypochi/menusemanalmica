@@ -7,6 +7,7 @@ type SidebarProps = {
   onChange: (section: Section) => void
   mobileOpen: boolean
   onClose: () => void
+  hasPendingShopping?: boolean
 }
 
 const links: { id: Section; label: string; icon: typeof CalendarDays }[] = [
@@ -17,7 +18,7 @@ const links: { id: Section; label: string; icon: typeof CalendarDays }[] = [
   { id: 'historial', label: 'Historial', icon: History },
 ]
 
-export default function Sidebar({ active, onChange, mobileOpen, onClose }: SidebarProps) {
+export default function Sidebar({ active, onChange, mobileOpen, onClose, hasPendingShopping = true }: SidebarProps) {
   return (
     <>
       {mobileOpen && <button className="sidebar-scrim" aria-label="Cerrar menú" onClick={onClose} />}
@@ -31,7 +32,7 @@ export default function Sidebar({ active, onChange, mobileOpen, onClose }: Sideb
         <nav className="side-nav" aria-label="Navegación principal">
           {links.map(({ id, label, icon: Icon }) => (
             <button key={id} className={`nav-link ${active === id ? 'nav-link--active' : ''}`} onClick={() => { onChange(id); onClose() }}>
-              <Icon size={19} strokeWidth={1.8} /><span>{label}</span>{id === 'compras' && <span className="nav-dot" />}
+              <Icon size={19} strokeWidth={1.8} /><span>{label}</span>{id === 'compras' && hasPendingShopping && <span className="nav-dot" />}
             </button>
           ))}
         </nav>
