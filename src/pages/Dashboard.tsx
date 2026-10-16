@@ -95,7 +95,10 @@ export default function Dashboard({
           <div className="panel-heading"><div><span className="panel-kicker">TU PLAN</span><h2>Comidas del día</h2></div><span className="date-pill">{WEEKDAY_NAMES[selectedDay]} {selectedDate.getDate()}</span></div>
           <p className="panel-description">Todo puede cambiar. Este es tu punto de partida.</p>
           <MealCard dayMeals={selectedDayMeals} onSelectSlot={onNavigateToMealSlot} />
-          <button className="text-button" onClick={() => onNavigate('menu')}>Completar menú del día <ArrowRight size={16} /></button>
+          <div className="dashboard-meals-links">
+            <button className="text-button" onClick={() => onNavigate('menu')}>Completar menú del día <ArrowRight size={16} /></button>
+            <button className="text-button text-button--secondary" onClick={() => onNavigate('registro')}>Registrar lo que comí <ArrowRight size={16} /></button>
+          </div>
         </section>
 
         <section className="panel shopping-panel">

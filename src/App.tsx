@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
-import { CalendarDays, ClipboardList, CookingPot, History, Utensils } from 'lucide-react'
+import { CalendarDays, CookingPot, History, Utensils } from 'lucide-react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import type { Section } from './components/Sidebar'
+import { loadFoodLogs, saveFoodLogs } from './lib/foodLogStorage'
+import type { FoodLogMap } from './lib/foodLogStorage'
 import { loadPlannedMeals, savePlannedMeals } from './lib/mealsStorage'
 import type { MealSlot, PlannedMealsMap } from './lib/mealsStorage'
 import { loadShoppingItems, saveShoppingItems } from './lib/shoppingStorage'
 import type { ShoppingItem } from './lib/shoppingStorage'
 import Dashboard from './pages/Dashboard'
+import FoodLog from './pages/FoodLog'
 import ShoppingList from './pages/ShoppingList'
 import WeeklyMenu from './pages/WeeklyMenu'
 
-const sectionDetails: Record<Exclude<Section, 'inicio' | 'menu' | 'compras'>, { title: string; subtitle: string; icon: typeof CalendarDays }> = {
-  registro: { title: 'Lo que comí', subtitle: 'Registrá tus comidas reales, sin importar si cambiaron los planes.', icon: ClipboardList },
+const sectionDetails: Record<Exclude<Section, 'inicio' | 'menu' | 'compras' | 'registro'>, { title: string; subtitle: string; icon: typeof CalendarDays }> = {
   historial: { title: 'Historial', subtitle: 'Tus semanas anteriores, para aprender de tu propia rutina.', icon: History },
 }
 
@@ -24,6 +26,7 @@ export default function App() {
   const [plannedMeals, setPlannedMeals] = useState<PlannedMealsMap>(() => loadPlannedMeals())
   const [initialEditingSlot, setInitialEditingSlot] = useState<MealSlot | null>(null)
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>(() => loadShoppingItems())
+  const [foodLogs, setFoodLogs] = useState<FoodLogMap>(() => loadFoodLogs())
 
   useEffect(() => {
     savePlannedMeals(plannedMeals)
@@ -32,6 +35,10 @@ export default function App() {
   useEffect(() => {
     saveShoppingItems(shoppingItems)
   }, [shoppingItems])
+
+  useEffect(() => {
+    saveFoodLogs(foodLogs)
+  }, [foodLogs])
 
   const changeSection = (section: Section) => setActive(section)
 
@@ -76,6 +83,60 @@ export default function App() {
   const handleNavigateToMealSlot = (slot: MealSlot) => {
     setInitialEditingSlot(slot)
     setActive('menu')
+  }
+
+  const handleSaveLoggedMeal = (dateKey: string, slot: MealSlot, value: string) => {
+    setFoodLogs((prev) => {
+      const existingEntry = prev[dateKey] || { meals: {} }
+      return {
+        ...prev,
+        [dateKey]: {
+          ...existingEntry,
+          meals: {
+            ...existingEntry.meals,
+            [slot]: value,
+          },
+        },
+      }
+    })
+  }
+
+  const handleDeleteLoggedMeal = (dateKey: string, slot: MealSlot) => {
+    setFoodLogs((prev) => {
+      const existingEntry = prev[dateKey]
+      if (!existingEntry) return prev
+      const updatedMeals = { ...existingEntry.meals }
+      delete updatedMeals[slot]
+      const next = { ...prev }
+      if (Object.keys(updatedMeals).length === 0 && !existingEntry.notes) {
+        delete next[dateKey]
+      } else {
+        next[dateKey] = {
+          ...existingEntry,
+          meals: updatedMeals,
+        }
+      }
+      return next
+    })
+  }
+
+  const handleSaveDayNotes = (dateKey: string, notes: string) => {
+    setFoodLogs((prev) => {
+      const existingEntry = prev[dateKey] || { meals: {} }
+      const cleanNotes = notes.trim()
+      const next = { ...prev }
+      if (!cleanNotes && Object.keys(existingEntry.meals).length === 0) {
+        delete next[dateKey]
+      } else if (!cleanNotes) {
+        next[dateKey] = { meals: existingEntry.meals }
+      } else {
+        next[dateKey] = {
+          meals: existingEntry.meals,
+          notes: cleanNotes,
+        }
+      }
+      return next
+    })
   }
 
   const handleAddShoppingItem = (
@@ -199,6 +260,18 @@ export default function App() {
             onClearAll={handleClearAllShopping}
             onClearChecked={handleClearCheckedShopping}
           />
+        ) : active === 'registro' ? (
+          <FoodLog
+            weekOffset={weekOffset}
+            onChangeWeekOffset={setWeekOffset}
+            selectedDay={selectedDay}
+            onChangeSelectedDay={setSelectedDay}
+            plannedMeals={plannedMeals}
+            foodLogs={foodLogs}
+            onSaveLoggedMeal={handleSaveLoggedMeal}
+            onDeleteLoggedMeal={handleDeleteLoggedMeal}
+            onSaveDayNotes={handleSaveDayNotes}
+          />
         ) : (
           <PlaceholderPage section={active} onBack={() => setActive('inicio')} />
         )}
@@ -207,10 +280,11 @@ export default function App() {
   )
 }
 
-function PlaceholderPage({ section, onBack }: { section: Exclude<Section, 'inicio' | 'menu' | 'compras'>; onBack: () => void }) {
+function PlaceholderPage({ section, onBack }: { section: Exclude<Section, 'inicio' | 'menu' | 'compras' | 'registro'>; onBack: () => void }) {
   const details = sectionDetails[section]
   const Icon = details.icon
   return <section className="placeholder-page"><div className="placeholder-art"><div className="placeholder-art-inner"><Icon size={42} strokeWidth={1.4} /><Utensils className="placeholder-utensils" size={21} /></div></div><span className="panel-kicker">PRÓXIMO PASO</span><h1>{details.title}</h1><p>{details.subtitle}</p><div className="coming-soon"><span className="coming-soon-dot" /> Esta sección la vamos a construir juntas.</div><button className="primary-button" onClick={onBack}><CookingPot size={17} /> Volver al inicio</button></section>
 }
+
 
 

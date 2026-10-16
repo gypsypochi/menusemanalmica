@@ -16,7 +16,7 @@ ETAPA 2: Funcionalidad local de las secciones principales (EN PROGRESO)
 [x] Construir la sección "Menú semanal" para planificar desayuno, almuerzo, merienda y cena de cada día de la semana
 [x] Conectar el menú semanal con el Dashboard ("Comidas del día", navegación de semanas/días sincronizada y persistencia en localStorage)
 [x] Construir la sección "Lista de compras" completa (agregar, editar, marcar/desmarcar, eliminar, vaciar con confirmación y filtrar ítems por categoría y estado), conectada con el Dashboard y localStorage
-[ ] Construir la sección "Lo que comí" (registro real diario vs. lo planificado, sin exigencias)
+[x] Construir la sección "Lo que comí" (registro real diario de desayuno, almuerzo, merienda y cena + observaciones del día, con referencia secundaria a lo planificado y persistencia independiente en localStorage)
 [ ] Construir la sección "Historial" para consultar semanas anteriores
 [ ] Conectar el resto de las secciones con el Dashboard y localStorage
 
