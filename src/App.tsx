@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { CalendarDays, CookingPot, History, Utensils } from 'lucide-react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import type { Section } from './components/Sidebar'
@@ -11,12 +10,9 @@ import { loadShoppingItems, saveShoppingItems } from './lib/shoppingStorage'
 import type { ShoppingItem } from './lib/shoppingStorage'
 import Dashboard from './pages/Dashboard'
 import FoodLog from './pages/FoodLog'
+import HistoryPage from './pages/HistoryPage'
 import ShoppingList from './pages/ShoppingList'
 import WeeklyMenu from './pages/WeeklyMenu'
-
-const sectionDetails: Record<Exclude<Section, 'inicio' | 'menu' | 'compras' | 'registro'>, { title: string; subtitle: string; icon: typeof CalendarDays }> = {
-  historial: { title: 'Historial', subtitle: 'Tus semanas anteriores, para aprender de tu propia rutina.', icon: History },
-}
 
 export default function App() {
   const [active, setActive] = useState<Section>('inicio')
@@ -83,6 +79,16 @@ export default function App() {
   const handleNavigateToMealSlot = (slot: MealSlot) => {
     setInitialEditingSlot(slot)
     setActive('menu')
+  }
+
+  const handleNavigateFromHistory = (
+    targetSection: 'menu' | 'registro',
+    targetWeekOffset: number,
+    targetDayIndex: number,
+  ) => {
+    setWeekOffset(targetWeekOffset)
+    setSelectedDay(targetDayIndex)
+    setActive(targetSection)
   }
 
   const handleSaveLoggedMeal = (dateKey: string, slot: MealSlot, value: string) => {
@@ -273,18 +279,19 @@ export default function App() {
             onSaveDayNotes={handleSaveDayNotes}
           />
         ) : (
-          <PlaceholderPage section={active} onBack={() => setActive('inicio')} />
+          <HistoryPage
+            plannedMeals={plannedMeals}
+            foodLogs={foodLogs}
+            shoppingItems={shoppingItems}
+            onNavigateToDay={handleNavigateFromHistory}
+            onNavigateSection={changeSection}
+          />
         )}
       </main>
     </div>
   )
 }
 
-function PlaceholderPage({ section, onBack }: { section: Exclude<Section, 'inicio' | 'menu' | 'compras' | 'registro'>; onBack: () => void }) {
-  const details = sectionDetails[section]
-  const Icon = details.icon
-  return <section className="placeholder-page"><div className="placeholder-art"><div className="placeholder-art-inner"><Icon size={42} strokeWidth={1.4} /><Utensils className="placeholder-utensils" size={21} /></div></div><span className="panel-kicker">PRÓXIMO PASO</span><h1>{details.title}</h1><p>{details.subtitle}</p><div className="coming-soon"><span className="coming-soon-dot" /> Esta sección la vamos a construir juntas.</div><button className="primary-button" onClick={onBack}><CookingPot size={17} /> Volver al inicio</button></section>
-}
 
 
 
