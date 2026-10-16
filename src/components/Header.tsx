@@ -1,0 +1,17 @@
+import { Bell, Menu, Search } from 'lucide-react'
+
+type HeaderProps = { onMenuClick: () => void }
+
+export default function Header({ onMenuClick }: HeaderProps) {
+  return (
+    <header className="topbar">
+      <button className="icon-button mobile-menu" aria-label="Abrir menú" onClick={onMenuClick}><Menu size={21} /></button>
+      <div className="breadcrumb"><span>Mi espacio</span><span className="breadcrumb-slash">/</span><strong>Inicio</strong></div>
+      <div className="topbar-actions">
+        <button className="search-button" aria-label="Buscar" onClick={() => window.alert('La búsqueda estará disponible en una próxima etapa.')}><Search size={17} /><span>Buscar...</span><kbd>⌘ K</kbd></button>
+        <button className="icon-button notification-button" aria-label="Notificaciones" onClick={() => window.alert('Todavía no tenés notificaciones.')}><Bell size={19} /></button>
+        <div className="avatar" aria-label="Perfil de usuario">M</div>
+      </div>
+    </header>
+  )
+}
