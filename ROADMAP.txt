@@ -17,8 +17,9 @@ ETAPA 2: Funcionalidad local de las secciones principales (COMPLETADA)
 [x] Conectar el menú semanal con el Dashboard ("Comidas del día", navegación de semanas/días sincronizada y persistencia en localStorage)
 [x] Construir la sección "Lista de compras" completa (agregar, editar, marcar/desmarcar, eliminar, vaciar con confirmación y filtrar ítems por categoría y estado), conectada con el Dashboard y localStorage
 [x] Construir la sección "Lo que comí" (registro real diario de desayuno, almuerzo, merienda y cena + observaciones del día, con referencia secundaria a lo planificado y persistencia independiente en localStorage)
-[x] Construir la sección "Historial" para consultar semanas anteriores en orden cronológico inverso (mostrando menú planificado, comidas registradas, observaciones y estado actual de compras)
+[x] Construir la sección "Historial" ("Mi historial") con diseño compacto centrado, gráfico visual semanal de actividad, grilla de tarjetas por día con acordeón desplegable y pie de compras pendientes
 [x] Conectar todas las secciones con el Dashboard y persistencia local en localStorage
+[x] Implementar modo claro y modo oscuro completo (interruptor con íconos Sol/Luna en el Header, variables CSS centralizadas con paleta lila/rosa nocturna y persistencia en localStorage)
 
 ETAPA 3: Integración con Supabase — Autenticación y Base de Datos (PENDIENTE)
 [ ] Crear proyecto en Supabase y configurar variables de entorno (`.env.local` con `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`)

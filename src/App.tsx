@@ -8,6 +8,8 @@ import { loadPlannedMeals, savePlannedMeals } from './lib/mealsStorage'
 import type { MealSlot, PlannedMealsMap } from './lib/mealsStorage'
 import { loadShoppingItems, saveShoppingItems } from './lib/shoppingStorage'
 import type { ShoppingItem } from './lib/shoppingStorage'
+import { applyThemeToDocument, loadTheme, saveTheme } from './lib/themeStorage'
+import type { ThemeMode } from './lib/themeStorage'
 import Dashboard from './pages/Dashboard'
 import FoodLog from './pages/FoodLog'
 import HistoryPage from './pages/HistoryPage'
@@ -17,12 +19,22 @@ import WeeklyMenu from './pages/WeeklyMenu'
 export default function App() {
   const [active, setActive] = useState<Section>('inicio')
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    const initial = loadTheme()
+    applyThemeToDocument(initial)
+    return initial
+  })
   const [weekOffset, setWeekOffset] = useState(0)
   const [selectedDay, setSelectedDay] = useState(new Date().getDay() === 0 ? 6 : new Date().getDay() - 1)
   const [plannedMeals, setPlannedMeals] = useState<PlannedMealsMap>(() => loadPlannedMeals())
   const [initialEditingSlot, setInitialEditingSlot] = useState<MealSlot | null>(null)
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>(() => loadShoppingItems())
   const [foodLogs, setFoodLogs] = useState<FoodLogMap>(() => loadFoodLogs())
+
+  useEffect(() => {
+    applyThemeToDocument(theme)
+    saveTheme(theme)
+  }, [theme])
 
   useEffect(() => {
     savePlannedMeals(plannedMeals)
@@ -37,6 +49,7 @@ export default function App() {
   }, [foodLogs])
 
   const changeSection = (section: Section) => setActive(section)
+  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
 
   const handleSaveMeal = (dateKey: string, slot: MealSlot, value: string) => {
     setPlannedMeals((prev) => {
@@ -230,7 +243,12 @@ export default function App() {
         hasPendingShopping={hasPendingShopping}
       />
       <main className="main-area">
-        <Header active={active} onMenuClick={() => setMobileOpen(true)} />
+        <Header
+          active={active}
+          onMenuClick={() => setMobileOpen(true)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
         {active === 'inicio' ? (
           <Dashboard
             onNavigate={changeSection}
